@@ -34,3 +34,11 @@ Professional American Football Live Play Calling Prediction Game
 - Turnover on downs will score as a turnover.
 - Points are cumulative, single wrong selection scores 0 for the play.
 - Can select as many options in tree as desired at own peril.
+
+## RUNNING SERVER NODE
+- Development
+  - npm run dev
+- Test
+  - npm test
+- Production
+  - npm start
