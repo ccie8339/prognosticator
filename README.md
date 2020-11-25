@@ -32,3 +32,5 @@ Professional American Football Live Play Calling Prediction Game
 - Play call must be in 5 seconds before snap.
 - Quick snaps may cause void of play.
 - Turnover on downs will score as a turnover.
+- Points are cumulative, single wrong selection scores 0 for the play.
+- Can select as many options in tree as desired at own peril.
