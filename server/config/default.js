@@ -20,7 +20,7 @@ module.exports = {
         "typ": "access"
       },
       "audience": "https://yourdomain.com",
-      "issuer": "feathers",
+      "issuer": process.env.AUTH_JWT_OPTIONS_ISSUER,
       "algorithm": process.env.AUTH_JWT_OPTIONS_ALGORITHM,
       "expiresIn": process.env.AUTH_JWT_OPTIONS_EXPIRESIN
     },
