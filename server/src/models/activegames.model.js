@@ -13,6 +13,11 @@ module.exports = function (app) {
       default: Sequelize.UUIDV4,
       primaryKey: true
     },
+    started: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     hometeam: {
       type: DataTypes.CHAR(3),
       allowNull: false,

@@ -15,8 +15,10 @@ module.exports = {
         const gameId = context.data.gameId;
         try {
           const result = await context.app.service('playcalls').find({
-            gameId : gameId,
-            userId : userId
+            query : {
+              gameId : gameId,
+              userId : userId
+            }
           })
           if (result.total > 0) {
             context.result = {

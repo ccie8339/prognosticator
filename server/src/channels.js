@@ -33,11 +33,14 @@ module.exports = function (app) {
       // app.channel(`userIds/${user.id}`).join(connection);
     }
   });
+  app.service('activegames').publish((data,hook) => {
+    if (data.id !== undefined) { // Prevent New Play Being Craeted When New Game Create Fails
+      app.service('plays').create({gameId : data.id})
+      return app.channel("player").send({ message : "NEW_GAME_AVAILABLE"});
+    }
+  })
   app.service('plays').publish((data, hook) => {
-    app.service('users').find()
-      .then(result => console.log(result))
-      .catch(error => console.log(error))
-    return app.channel("player").send(data);
+    return app.channel("player").send({ message : "REQUEST_PLAYCALL", gameId : data.gameId, playId : data.id, });
   })
   // eslint-disable-next-line no-unused-vars
   // app.publish((data, hook) => {

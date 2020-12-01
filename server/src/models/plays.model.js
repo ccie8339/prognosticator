@@ -15,7 +15,7 @@ module.exports = function (app) {
     },
     play: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     voided: {
       type: DataTypes.BOOLEAN,
