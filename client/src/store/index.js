@@ -26,15 +26,19 @@ export default new Vuex.Store({
     // eslint-disable-next-line
     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MDY4NTQ1OTIsImV4cCI6MTYwOTQ0NjU5MiwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6IlByb2dub3N0aWNhdG9yIFRoZSBHYW1lIiwic3ViIjoiZjNjZDNjZDctZmE2Mi00Y2Y4LTk3YjUtY2RlZmMwMmU1ZmI3IiwianRpIjoiM2U2MTI5NmEtOTAxMi00NDRmLWJhODYtMDNlMjg2M2I1ZjNmIn0.79n909Q3bPnQrkT_ScD9O4yLheSeqAW9-xU_NsuE_5I",
     gameId: null,
-    authenticated: false,
+    socketAuthenticated: false,
     playId: null,
     playCall: null,
     score: 0,
     games: []
   },
   mutations: {
-    setAuthenticated(state) {
+    setToken(state, token) {
+      state.token = token;
       state.authenticated = true;
+    },
+    setSocketAuthenticated(state) {
+      state.socketAuthenticated = true;
     },
     setGameId(state, gameId) {
       state.gameId = gameId;
@@ -48,6 +52,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setToken({ commit }, token) {
+      commit("setToken", token);
+    },
     SOCKET_connect({ commit }) {
       Vue.prototype.$socket.emit(
         "create",
@@ -62,7 +69,7 @@ export default new Vuex.Store({
             console.log("Error Authenticating: ", error);
           } else {
             // console.log("Logged In", error, authResult);
-            commit("setAuthenticated");
+            commit("setSocketAuthenticated");
           }
         }
       );
