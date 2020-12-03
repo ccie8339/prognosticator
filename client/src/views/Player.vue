@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <play-caster />
+    <play-caster :submitPlayCall="submitPlayCall" />
   </v-container>
 </template>
 <script>
@@ -9,5 +9,10 @@ export default {
   components: {
     PlayCaster,
   },
+  methods: {
+    submitPlayCall: (call) => {
+      console.log(call);
+    }
+  }
 };
 </script>

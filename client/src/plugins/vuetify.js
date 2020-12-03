@@ -13,6 +13,7 @@ export default new Vuetify({
       light: {
         primary: "#013369",
         error: "#ff0000",
+        football: "#6e5e17"
       }
     }
   }
