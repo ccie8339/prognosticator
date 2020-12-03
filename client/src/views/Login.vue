@@ -14,7 +14,15 @@
                     {{ loginErrorMessage }}
                   </v-card-text>
                   <v-card-actions class="d-flex justify-end">
-                    <v-btn @click="loginErrorMessage = null;loginError = false;" class="red white--text">OK</v-btn>
+                    <v-spacer />
+                    <v-btn
+                      @click="
+                        loginErrorMessage = null;
+                        loginError = false;
+                      "
+                      class="red white--text"
+                      >OK</v-btn
+                    >
                   </v-card-actions>
                 </v-card>
               </template>
@@ -47,12 +55,11 @@
 import { mapActions } from "vuex";
 const axios = require("axios");
 axios.interceptors.response.use(
-  (response) => {
+  response => {
     return response;
   },
-  (error) => {
+  error => {
     if (error.response.status === 401) {
-      // this.loginErrorMessage = "Wrong EMail or Password Provided";
       const response = { data: { status: 401 } };
       return response;
     }
@@ -66,7 +73,7 @@ export default {
       email: null,
       password: null,
       loginErrorMessage: null,
-      loginError: false,
+      loginError: false
     };
   },
   methods: {
@@ -75,20 +82,22 @@ export default {
       const body = {
         strategy: "local",
         email: this.email,
-        password: this.password,
+        password: this.password
       };
       try {
         const response = await axios.post(
           "http://192.168.1.110:3030/authentication",
           body
         );
-        // console.log(response);
+        console.log(response);
         if (
-          response.data.status !== undefined &&
-          response.data.status === 201
+          response.status !== undefined &&
+          response.status === 201
         ) {
           const token = response.data.accessToken;
           this.setToken(token);
+          console.log("Got Here", this.$router);
+          this.$router.push("/gridiron");
         } else if (
           response.data.status !== undefined &&
           response.data.status === 401
@@ -99,7 +108,7 @@ export default {
       } catch (error) {
         console.log("ERROR: ", error);
       }
-    },
-  },
+    }
+  }
 };
 </script>

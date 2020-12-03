@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Login from "../views/Login.vue"
+import Login from "../views/Login2.vue";
+import Player from "../views/Player.vue";
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,11 @@ const routes = [
     name: "Login",
     component: Login
   },
+  {
+    path: "/gridiron",
+    name: "Grid Iron",
+    component: Player
+  }
   // {
   //   path: "/about",
   //   name: "About",
