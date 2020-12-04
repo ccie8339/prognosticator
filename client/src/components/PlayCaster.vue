@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="5">
+      <v-col cols="6">
         <v-card class="gradient">
           <v-card-title class="flex-d justify-center">Play Caster</v-card-title>
           <v-spacer />
@@ -12,11 +12,14 @@
                   <v-col cols="12">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.run = !playCall.run;
                           playCall.pass = false;
                         "
-                        :color="playCall.run ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.run ? 'football' : 'football lighten-4'
+                        "
                         >RUN</v-btn
                       >
                     </v-row>
@@ -24,12 +27,15 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.left = !playCall.left;
                           playCall.middle = false;
                           playCall.right = false;
                         "
-                        :color="playCall.left ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.left ? 'football' : 'football lighten-4'
+                        "
                         :disabled="!playCall.run"
                         >LEFT</v-btn
                       >
@@ -38,12 +44,15 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.middle = !playCall.middle;
                           playCall.left = false;
                           playCall.right = false;
                         "
-                        :color="playCall.middle ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.middle ? 'football' : 'football lighten-4'
+                        "
                         :disabled="!playCall.run"
                         >MIDDLE</v-btn
                       >
@@ -52,12 +61,15 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.right = !playCall.right;
                           playCall.left = false;
                           playCall.middle = false;
                         "
-                        :color="playCall.right ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.right ? 'football' : 'football lighten-4'
+                        "
                         :disabled="!playCall.run"
                         >RIGHT</v-btn
                       >
@@ -70,11 +82,14 @@
                   <v-col cols="12">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.pass = !playCall.pass;
                           playCall.run = false;
                         "
-                        :color="playCall.pass ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.pass ? 'football' : 'football lighten-4'
+                        "
                         >PASS</v-btn
                       >
                     </v-row>
@@ -82,12 +97,15 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.short = !playCall.short;
                           playCall.medium = false;
                           playCall.long = false;
                         "
-                        :color="playCall.short ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.short ? 'football' : 'football lighten-4'
+                        "
                         :disabled="!playCall.pass"
                         >SHORT</v-btn
                       >
@@ -96,12 +114,15 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.medium = !playCall.medium;
                           playCall.short = false;
                           playCall.long = false;
                         "
-                        :color="playCall.medium ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.medium ? 'football' : 'football lighten-4'
+                        "
                         :disabled="!playCall.pass"
                         >MEDIUM</v-btn
                       >
@@ -110,12 +131,15 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        medium
                         @click="
                           playCall.long = !playCall.long;
                           playCall.medium = false;
                           playCall.short = false;
                         "
-                        :color="playCall.long ? 'football' : 'football lighten-4'"
+                        :color="
+                          playCall.long ? 'football' : 'football lighten-4'
+                        "
                         :disabled="!playCall.pass"
                         >LONG</v-btn
                       >
@@ -126,22 +150,26 @@
               <v-col cols="12">
                 <v-row justify="space-around">
                   <v-btn
+                    large
                     @click="playCall.touchdown = !playCall.touchdown"
-                    :color="playCall.touchdown ? 'football' : 'football lighten-4'"
+                    :color="
+                      playCall.touchdown ? 'football' : 'football lighten-4'
+                    "
                     >TOUCHDOWN</v-btn
                   >
                   <v-btn
+                    large
                     @click="playCall.turnover = !playCall.turnover"
-                    :color="playCall.turnover ? 'football' : 'football lighten-4'"
+                    :color="
+                      playCall.turnover ? 'football' : 'football lighten-4'
+                    "
                     >TURNOVER</v-btn
                   >
                 </v-row>
               </v-col>
               <v-col rows="12">
                 <v-row justify="space-around">
-                  <v-btn
-                    @click="submitPlay"
-                    color="football"
+                  <v-btn medium @click="submitPlay" color="football"
                     >CALL!</v-btn
                   >
                 </v-row>
@@ -158,7 +186,7 @@ export default {
   props: ["submitPlayCall"],
   data() {
     return {
-      playCall : {
+      playCall: {
         run: false,
         pass: false,
         left: false,
@@ -170,12 +198,12 @@ export default {
         touchdown: false,
         turnover: false,
       },
-      defaultPlayCall: null
+      defaultPlayCall: null,
     };
   },
   methods: {
     submitPlay() {
-      let play = ""
+      let play = "";
       if (this.playCall.run) {
         play += "RU";
         if (this.playCall.left) {
@@ -199,21 +227,21 @@ export default {
         play += "TD";
       }
       if (this.playCall.turnover) {
-        play += "TO"
+        play += "TO";
       }
       this.submitPlayCall(play);
-      this.playCall = {...this.defaultPlayCall};
-    }
+      this.playCall = { ...this.defaultPlayCall };
+    },
   },
   created() {
-    this.defaultPlayCall = {...this.playCall}
-  }
+    this.defaultPlayCall = { ...this.playCall };
+  },
 };
 </script>
 <style scoped>
-button {
+/* button {
   width: 110px;
-}
+} */
 .gradient {
   background: linear-gradient(#09da1a, #0a5010);
 }

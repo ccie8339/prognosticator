@@ -30,77 +30,95 @@ export default new Vuex.Store({
     playId: null,
     playCall: null,
     score: 0,
-    games: []
+    games: [],
+    scoreBoard: [
+      {
+        rank: 2,
+        name: "John Doe",
+        score: 350,
+      },
+      {
+        rank: 1,
+        name: "John Smith",
+        score: 750
+      },
+      {
+        rank: 3,
+        name: "Not Me",
+        score: 225
+      }
+    ]
   },
   mutations: {
-    setToken(state, token) {
-      state.token = token;
-      state.authenticated = true;
-    },
-    setSocketAuthenticated(state) {
-      state.socketAuthenticated = true;
-    },
-    setGameId(state, gameId) {
-      state.gameId = gameId;
-    },
-    requestPlayCall(state, playId) {
-      state.playId = playId;
-      state.playCall = null;
-    },
-    setGames(state, games) {
-      state.games = [...games];
-    }
+  setToken(state, token) {
+    state.token = token;
+    state.authenticated = true;
   },
+  setSocketAuthenticated(state) {
+    state.socketAuthenticated = true;
+  },
+  setGameId(state, gameId) {
+    state.gameId = gameId;
+  },
+  requestPlayCall(state, playId) {
+    state.playId = playId;
+    state.playCall = null;
+  },
+  setGames(state, games) {
+    state.games = [...games];
+  }
+},
   actions: {
-    setToken({ commit }, token) {
-      commit("setToken", token);
-    },
-    SOCKET_connect({ commit }) {
-      Vue.prototype.$socket.emit(
-        "create",
-        "authentication",
-        {
-          strategy: "local",
-          email: "admin@local.com",
-          password: "changeme"
-        },
-        function(error) {
-          if (error) {
-            console.log("Error Authenticating: ", error);
-          } else {
-            // console.log("Logged In", error, authResult);
-            commit("setSocketAuthenticated");
-          }
-        }
-      );
-    },
-    "SOCKET_plays created"({ state, commit }, data) {
-      switch (data.message) {
-        case "REQUEST_PLAYCALL":
-          if (data.gameId == state.gameId) {
-            commit("requestPlayCall", data.playId);
-          }
-          break;
-        case "NEW_GAME_AVAILABLE": {
-          const newGames = getGames(state.token);
-          commit("setGames", newGames);
-          break;
+  setToken({ commit }, token) {
+    commit("setToken", token);
+  },
+  SOCKET_connect({ commit }) {
+    Vue.prototype.$socket.emit(
+      "create",
+      "authentication",
+      {
+        strategy: "local",
+        email: "admin@local.com",
+        password: "changeme"
+      },
+      function (error) {
+        if (error) {
+          console.log("Error Authenticating: ", error);
+        } else {
+          // console.log("Logged In", error, authResult);
+          commit("setSocketAuthenticated");
         }
       }
-    },
-    setGameId({ commit }, gameId) {
-      commit("setGameId", gameId);
-    },
-    setGames({ commit }, games) {
-      commit("setGames", games);
+    );
+  },
+  "SOCKET_plays created"({ state, commit }, data) {
+    switch (data.message) {
+      case "REQUEST_PLAYCALL":
+        if (data.gameId == state.gameId) {
+          commit("requestPlayCall", data.playId);
+        }
+        break;
+      case "NEW_GAME_AVAILABLE": {
+        const newGames = getGames(state.token);
+        commit("setGames", newGames);
+        break;
+      }
     }
   },
+  setGameId({ commit }, gameId) {
+    commit("setGameId", gameId);
+  },
+  setGames({ commit }, games) {
+    commit("setGames", games);
+  }
+},
   modules: {},
   getters: {
-    isAuthenticated: state => state.authenticated,
-    token: state => state.token,
-    playCall: state => state.playCall,
-    getGames: state => state.games,
-    getPlayId: state => state.playId
-  }
+  isAuthenticated: state => state.authenticated,
+  token: state => state.token,
+  playCall: state => state.playCall,
+  getGames: state => state.games,
+  getPlayId: state => state.playId,
+  getScoreBoard: state => state.scoreBoard
+}
 });
