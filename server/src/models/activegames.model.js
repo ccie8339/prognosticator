@@ -18,6 +18,11 @@ module.exports = function (app) {
       allowNull: false,
       defaultValue: false
     },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     hometeam: {
       type: DataTypes.CHAR(3),
       allowNull: false,
@@ -28,6 +33,10 @@ module.exports = function (app) {
     },
     gameweek: {
       type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    channel: {
+      type: DataTypes.CHAR,
       allowNull: false
     }
   }, {

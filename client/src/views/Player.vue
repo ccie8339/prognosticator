@@ -2,26 +2,40 @@
   <v-container>
     <v-row>
       <v-col cols="6">
-        <score-board />
+        <score-board v-if="currentGame != null" />
       </v-col>
       <v-col cols="12">
-        <play-caster :submitPlayCall="submitPlayCall" />
+        <play-caster v-if="currentGame != null" :submitPlayCall="submitPlayCall" />
+        <game-selector v-else :setSelectedGame="setSelectedGame" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import GameSelector from "../components/GameSelector";
 import PlayCaster from "../components/PlayCaster";
 import ScoreBoard from "../components/ScoreBoard";
 export default {
   components: {
+    GameSelector,
     PlayCaster,
-    ScoreBoard,
+    ScoreBoard
   },
   methods: {
-    submitPlayCall: (call) => {
-      console.log(call);
+    ...mapActions({setGameId: "setGameId"}),
+    setSelectedGame(game) {
+      this.setGameId(game)
+      // console.log(game);
     },
+    submitPlayCall: call => {
+      console.log(call);
+    }
   },
+  computed: {
+    ...mapGetters({
+      currentGame: "getCurrentGame"
+    })
+  }
 };
 </script>

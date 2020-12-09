@@ -13,9 +13,17 @@ module.exports = function (app) {
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
     },
-    play: {
+    playcall: {
       type: DataTypes.STRING(5),
       allowNull: false,
+    },
+    play: {
+      type: DataTypes.STRING(5),
+      allowNull: true
+    },
+    points: {
+      type: DataTypes.SMALLINT,
+      allowNull: true
     }
   }, {
     hooks: {

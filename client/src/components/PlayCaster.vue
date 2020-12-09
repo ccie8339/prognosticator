@@ -13,6 +13,7 @@
                     <v-row justify="center">
                       <v-btn
                         medium
+                        outlined
                         @click="
                           playCall.run = !playCall.run;
                           playCall.pass = false;
@@ -27,6 +28,7 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                      outlined
                         medium
                         @click="
                           playCall.left = !playCall.left;
@@ -44,6 +46,7 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                      outlined
                         medium
                         @click="
                           playCall.middle = !playCall.middle;
@@ -61,6 +64,7 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                      outlined
                         medium
                         @click="
                           playCall.right = !playCall.right;

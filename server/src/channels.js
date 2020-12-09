@@ -1,4 +1,5 @@
 module.exports = function (app) {
+  const userConnections = {};
   if (typeof app.channel !== 'function') {
     // If no real-time functionality has been configured just return
     return;
@@ -21,6 +22,11 @@ module.exports = function (app) {
 
       // Add it to the authenticated user channel
       app.channel('player').join(connection);
+      try {
+        userConnections[connection.user.id] = connection;
+      } catch (error) {
+        console.log(error);
+      }
       // Channels can be named anything and joined on any condition 
 
       // E.g. to send real-time events only to admins use
@@ -33,14 +39,29 @@ module.exports = function (app) {
       // app.channel(`userIds/${user.id}`).join(connection);
     }
   });
-  app.service('activegames').publish((data,hook) => {
-    if (data.id !== undefined) { // Prevent New Play Being Craeted When New Game Create Fails
-      app.service('plays').create({gameId : data.id})
-      return app.channel("player").send({ message : "NEW_GAME_AVAILABLE"});
+  app.service('activegames').publish(async (data, hook) => {
+    if (data.id !== undefined) { // Prevent New Play Being Created When New Game Create Fails
+      // app.service('plays').create({gameId : data.id})
+      try {
+        const response = await app.service('activegames').find();
+        return app.channel("player").send({ message: "NEW_GAME_AVAILABLE", games:  response.data});
+      } catch (error) {
+        console.log(error);
+      }
     }
   })
   app.service('plays').publish((data, hook) => {
-    return app.channel("player").send({ message : "REQUEST_PLAYCALL", gameId : data.gameId, playId : data.id, });
+    return app.channel("player").send({ message: "REQUEST_PLAYCALL", gameId: data.gameId, playId: data.id, });
+  })
+  app.service('joinedgames').publish('created', async (data, hook) => {
+    try {
+      const games = await app.service('activegames').get(data.gameId);
+      await app.channel(`CHANNEL_${games.channel}`).join(userConnections[data.userId]);
+      const response = await app.channel(`CHANNEL_${games.channel}`).send({message: "TEST MESSAGE"});
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   })
   // eslint-disable-next-line no-unused-vars
   // app.publish((data, hook) => {
