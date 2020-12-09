@@ -28,7 +28,7 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
-                      outlined
+                        outlined
                         medium
                         @click="
                           playCall.left = !playCall.left;
@@ -46,7 +46,7 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
-                      outlined
+                        outlined
                         medium
                         @click="
                           playCall.middle = !playCall.middle;
@@ -64,7 +64,7 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
-                      outlined
+                        outlined
                         medium
                         @click="
                           playCall.right = !playCall.right;
@@ -200,9 +200,9 @@ export default {
         medium: false,
         long: false,
         touchdown: false,
-        turnover: false,
+        turnover: false
       },
-      defaultPlayCall: null,
+      defaultPlayCall: null
     };
   },
   methods: {
@@ -235,11 +235,11 @@ export default {
       }
       this.submitPlayCall(play);
       this.playCall = { ...this.defaultPlayCall };
-    },
+    }
   },
   created() {
     this.defaultPlayCall = { ...this.playCall };
-  },
+  }
 };
 </script>
 <style scoped>

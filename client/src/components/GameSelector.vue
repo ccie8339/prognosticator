@@ -1,13 +1,21 @@
 <template>
-  <v-card v-if="availableGames.length > 0" class="mx-auto GameSelector" max-width="300">
-    <v-card-title>
-      Available Games
-    </v-card-title>
+  <v-card
+    v-if="availableGames.length > 0"
+    class="mx-auto GameSelector"
+    max-width="300"
+  >
+    <v-card-title> Available Games </v-card-title>
     <v-list rounded>
       <v-list-item-group active-class="SelectedGame">
-        <v-list-item v-for="(game, i) in availableGames" :key="i" @click="selectedGame=game.id">
+        <v-list-item
+          v-for="(game, i) in availableGames"
+          :key="i"
+          @click="selectedGame = game.id"
+        >
           <v-list-item-content>
-            <v-list-item-title v-text="game.visitingteam + ' @ ' + game.hometeam" />
+            <v-list-item-title
+              v-text="game.visitingteam + ' @ ' + game.hometeam"
+            />
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -23,19 +31,21 @@ export default {
   props: ["setSelectedGame"],
   data() {
     return {
-      selectedGame: null,
+      selectedGame: null
     };
   },
   methods: {
     ...mapActions({ setAvailableGames: "setAvailableGames" }),
-    chooseGame() { this.setSelectedGame(this.selectedGame) }
+    chooseGame() {
+      this.setSelectedGame(this.selectedGame);
+    }
   },
   computed: {
-    ...mapGetters({ availableGames: "getAvailableGames" }),
+    ...mapGetters({ availableGames: "getAvailableGames" })
   },
   created() {
     this.setAvailableGames();
-  },
+  }
 };
 </script>
 <style scoped>

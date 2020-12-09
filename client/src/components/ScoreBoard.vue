@@ -6,7 +6,11 @@
           <v-card-title class="flex-d justify-center">SCOREBOARD</v-card-title>
           <v-card-text>
             <ul>
-              <li v-for="score in getScoreBoard" :key="score.rank" style="list-style-type: none;">
+              <li
+                v-for="score in getScoreBoard"
+                :key="score.rank"
+                style="list-style-type: none"
+              >
                 {{ score.name }} {{ score.score }}
               </li>
             </ul>
@@ -20,7 +24,7 @@
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["getScoreBoard"]),
-  },
+    ...mapGetters(["getScoreBoard"])
+  }
 };
 </script>

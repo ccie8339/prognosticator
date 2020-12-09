@@ -64,10 +64,10 @@
 import { mapActions } from "vuex";
 const axios = require("axios");
 axios.interceptors.response.use(
-  (response) => {
+  response => {
     return response;
   },
-  (error) => {
+  error => {
     if (error.response.status === 401) {
       const response = { data: { status: 401 } };
       return response;
@@ -82,7 +82,7 @@ export default {
       email: null,
       password: null,
       loginErrorMessage: null,
-      loginError: false,
+      loginError: false
     };
   },
   methods: {
@@ -91,7 +91,7 @@ export default {
       const body = {
         strategy: "local",
         email: this.email,
-        password: this.password,
+        password: this.password
       };
       try {
         const response = await axios.post(
@@ -101,7 +101,6 @@ export default {
         if (response.status !== undefined && response.status === 201) {
           const token = response.data.accessToken;
           this.setToken(token);
-          console.log("Got Here", this.$router);
           this.$router.push("/gridiron");
         } else if (
           response.data.status !== undefined &&
@@ -113,7 +112,7 @@ export default {
       } catch (error) {
         console.log("ERROR: ", error);
       }
-    },
-  },
+    }
+  }
 };
 </script>

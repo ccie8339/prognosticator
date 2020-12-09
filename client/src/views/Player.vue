@@ -5,7 +5,10 @@
         <score-board v-if="currentGame != null" />
       </v-col>
       <v-col cols="12">
-        <play-caster v-if="currentGame != null" :submitPlayCall="submitPlayCall" />
+        <play-caster
+          v-if="currentGame != null"
+          :submitPlayCall="submitPlayCall"
+        />
         <game-selector v-else :setSelectedGame="setSelectedGame" />
       </v-col>
     </v-row>
@@ -23,9 +26,9 @@ export default {
     ScoreBoard
   },
   methods: {
-    ...mapActions({setGameId: "setGameId"}),
+    ...mapActions({ setGameId: "setGameId" }),
     setSelectedGame(game) {
-      this.setGameId(game)
+      this.setGameId(game);
       // console.log(game);
     },
     submitPlayCall: call => {

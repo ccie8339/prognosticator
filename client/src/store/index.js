@@ -36,7 +36,7 @@ export default new Vuex.Store({
       {
         rank: 2,
         name: "John Doe",
-        score: 350,
+        score: 350
       },
       {
         rank: 1,
@@ -51,89 +51,83 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
-  setToken(state, token) {
-    state.token = token;
-    state.authenticated = true;
-  },
-  setSocketAuthenticated(state) {
-    state.socketAuthenticated = true;
-  },
-  setGameId(state, gameId) {
-    state.currentGame = gameId;
-  },
-  requestPlayCall(state, playId) {
-    state.playId = playId;
-    state.playCall = null;
-  },
-  setAvailableGames(state, games) {
-    state.availableGames = [...games];
-  }
-},
-  actions: {
-  async setAvailableGames({state, commit}) {
-    commit("setAvailableGames",[]);
-    const availableGames = await getGames(state.token);
-    commit("setAvailableGames",availableGames);
-  },
-  setToken({ commit }, token) {
-    commit("setToken", token);
-  },
-  SOCKET_connect({ commit }) {
-    Vue.prototype.$socket.emit(
-      "create",
-      "authentication",
-      {
-        strategy: "local",
-        email: "admin@local.com",
-        password: "changeme"
-      },
-      function (error) {
-        if (error) {
-          console.log("Error Authenticating: ", error);
-        } else {
-          commit("setSocketAuthenticated");
-        }
-      }
-    );
-  },
-  // eslint-disable-next-line
-  "SOCKET_joinedgames created"({state,commit}, data) {
-    console.log(data);
-  },
-  // eslint-disable-next-line
-  "SOCKET_activegames created"({commit}, data) {
-    commit("setAvailableGames",[]);
-    commit("setAvailableGames", data.games);
-  },
-  "SOCKET_plays created"({ state, commit }, data) {
-    switch (data.message) {
-      case "REQUEST_PLAYCALL":
-        if (data.gameId == state.gameId) {
-          commit("requestPlayCall", data.playId);
-        }
-        break;
-      // case "NEW_GAME_AVAILABLE": {
-      //   const newGames = getGames(state.token);
-      //   commit("setGames", newGames);
-      //   break;
-      // }
+    setToken(state, token) {
+      state.token = token;
+      state.authenticated = true;
+    },
+    setSocketAuthenticated(state) {
+      state.socketAuthenticated = true;
+    },
+    setGameId(state, gameId) {
+      state.currentGame = gameId;
+    },
+    requestPlayCall(state, playId) {
+      state.playId = playId;
+      state.playCall = null;
+    },
+    setAvailableGames(state, games) {
+      state.availableGames = [...games];
     }
   },
-  setGameId({ commit }, gameId) {
-    commit("setGameId", gameId);
+  actions: {
+    async setAvailableGames({ state, commit }) {
+      commit("setAvailableGames", []);
+      const availableGames = await getGames(state.token);
+      commit("setAvailableGames", availableGames);
+    },
+    setToken({ commit }, token) {
+      commit("setToken", token);
+    },
+    SOCKET_connect({ commit }) {
+      Vue.prototype.$socket.emit(
+        "create",
+        "authentication",
+        {
+          strategy: "local",
+          email: "admin@local.com",
+          password: "changeme"
+        },
+        function(error) {
+          if (error) {
+            console.log("Error Authenticating: ", error);
+          } else {
+            commit("setSocketAuthenticated");
+          }
+        }
+      );
+    },
+    // eslint-disable-next-line
+    "SOCKET_joinedgames created"({ state, commit }, data) {
+      console.log(data);
+    },
+    "SOCKET_activegames created"({ commit }, data) {
+      commit("setAvailableGames", []);
+      commit("setAvailableGames", data.games);
+    },
+    "SOCKET_plays created"({ state, commit }, data) {
+      switch (data.message) {
+        case "REQUEST_PLAYCALL":
+          if (data.gameId == state.gameId) {
+            commit("requestPlayCall", data.playId);
+          }
+          break;
+      }
+    },
+    setGameId({ commit }, gameId) {
+      commit("setGameId", gameId);
+    },
+    setGames({ commit }, games) {
+      commit("setGames", games);
+    }
   },
-  setGames({ commit }, games) {
-    commit("setGames", games);
-  }
-},
   modules: {},
   getters: {
-  isAuthenticated: state => state.authenticated,
-  token: state => state.token,
-  playCall: state => state.playCall,
-  getAvailableGames: state => state.availableGames,
-  getPlayId: state => state.playId,
-  getScoreBoard: state => state.scoreBoard,
-  getCurrentGame: state => state.currentGame
-}
+    isAuthenticated: state => state.authenticated,
+    token: state => state.token,
+    playCall: state => state.playCall,
+    getAvailableGames: state => state.availableGames,
+    getPlayId: state => state.playId,
+    getScoreBoard: state => state.scoreBoard,
+    getCurrentGame: state => state.currentGame
+  }
 });
