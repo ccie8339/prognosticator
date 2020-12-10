@@ -1,9 +1,9 @@
 <template>
-  <v-container>
-    <v-row>
+  <v-container class="mx-auto">
+    <v-row justify="center">
       <v-col cols="6">
-        <v-card class="gradient">
-          <v-card-title class="flex-d justify-center">Play Caster</v-card-title>
+        <v-card class="primary" shaped>
+          <v-card-title class="flex-d justify-center white--text text-xl-h4 font-weight-bold">Play Caster</v-card-title>
           <v-spacer />
           <v-card-actions>
             <v-row>
@@ -13,13 +13,14 @@
                     <v-row justify="center">
                       <v-btn
                         medium
-                        outlined
+                        class="white--text"
+                        :outlined="!playCall.run"
                         @click="
                           playCall.run = !playCall.run;
                           playCall.pass = false;
                         "
                         :color="
-                          playCall.run ? 'football' : 'football lighten-4'
+                          playCall.run ? 'button' : 'button'
                         "
                         >RUN</v-btn
                       >
@@ -173,7 +174,7 @@
               </v-col>
               <v-col rows="12">
                 <v-row justify="space-around">
-                  <v-btn medium @click="submitPlay" color="football"
+                  <v-btn medium @click="submitPlay" color="button"
                     >CALL!</v-btn
                   >
                 </v-row>
@@ -248,5 +249,8 @@ export default {
 } */
 .gradient {
   background: linear-gradient(#09da1a, #0a5010);
+}
+.PlayCaster {
+  background-color:blue;
 }
 </style>
