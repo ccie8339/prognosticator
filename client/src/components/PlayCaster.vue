@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="currentGameStarted === true" class="mx-auto">
+  <v-container class="mx-auto">
     <v-row justify="center">
       <v-col cols="6">
         <v-card class="primary" shaped>
