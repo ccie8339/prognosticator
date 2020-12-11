@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mx-auto">
+  <v-container v-if="currentGameStarted === true" class="mx-auto">
     <v-row justify="center">
       <v-col cols="6">
         <v-card class="primary" shaped>
@@ -211,6 +211,7 @@
   </v-container>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: ["submitPlayCall"],
   data() {
@@ -231,6 +232,9 @@ export default {
       buttonSelectedClass: "buttonTextSelected--text",
       defaultPlayCall: null,
     };
+  },
+  computed: {
+    ...mapGetters({currentGameStarted : "getCurrentGameStarted"})
   },
   methods: {
     submitPlay() {

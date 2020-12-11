@@ -61,6 +61,9 @@ export default new Vuex.Store({
     setGameId(state, gameId) {
       state.currentGame = gameId;
     },
+    setCurrentGameStarted(state, isGameStarted) {
+      state.currentGameStarted = isGameStarted;
+    },
     requestPlayCall(state, playId) {
       state.playId = playId;
       state.playCall = null;
@@ -115,6 +118,7 @@ export default new Vuex.Store({
     },
     setGameId({ commit }, gameId) {
       commit("setGameId", gameId);
+      commit("setCurrentGameStarted", false);
     },
     setGames({ commit }, games) {
       commit("setGames", games);
@@ -128,6 +132,16 @@ export default new Vuex.Store({
     getAvailableGames: state => state.availableGames,
     getPlayId: state => state.playId,
     getScoreBoard: state => state.scoreBoard,
-    getCurrentGame: state => state.currentGame
+    getCurrentGame: state => {
+      let currentGame = null
+      state.availableGames.map(game => {
+        console.log(game.id, state.currentGame);
+        if (game.id === state.currentGame) {
+          currentGame = game;
+        }
+      })
+      return currentGame;
+    },
+    getCurrentGameStarted: state => state.currentGameStarted
   }
 });
