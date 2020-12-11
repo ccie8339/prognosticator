@@ -1,56 +1,65 @@
 <template>
-  <v-container fluid class="blue darken-4 mt-0 pt-0" fill-height>
-    <v-row>
-      <v-col cols="12" align-self="start" order="1" class="pt-1">
-        <v-row class="d-flex justify-center">
-          <v-col cols="4">
-            <v-dialog v-model="loginError" max-width="35%">
-              <template>
-                <v-card>
-                  <v-card-title class="flex-d justify-center red--text"
-                    >There was an issue with your login</v-card-title
-                  >
-                  <v-card-text style="font-size: 17px" class="red--text">
-                    {{ loginErrorMessage }}
-                  </v-card-text>
-                  <v-card-actions class="d-flex justify-end">
-                    <v-spacer />
-                    <v-btn
-                      @click="
-                        loginErrorMessage = null;
-                        loginError = false;
-                      "
-                      class="red white--text"
-                      >OK</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-              </template>
-            </v-dialog>
+  <v-container fill-height fluid>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-dialog v-model="loginError" max-width="35%">
+          <template>
             <v-card>
-              <v-card-text>
-                <v-form v-model="valid" ref="loginForm">
-                  <v-text-field v-model="email" label="Enter E-Mail Address" />
-                  <v-text-field
-                    v-model="password"
-                    label="Enter Password"
-                    type="password"
-                  />
-                  <v-layout class="d-flex justify-end">
-                    <v-btn @click="login" class="blue darken-4 white--text"
-                      >LOGIN</v-btn
-                    >
-                  </v-layout>
-                </v-form>
+              <v-card-title class="flex-d justify-center error--text"
+                >There was an issue with your login</v-card-title
+              >
+              <v-card-text style="font-size: 17px" class="error--text">
+                {{ loginErrorMessage }}
               </v-card-text>
+              <v-card-actions class="d-flex justify-end">
+                <v-spacer />
+                <v-btn
+                  @click="
+                    loginErrorMessage = null;
+                    loginError = false;
+                  "
+                  class="red white--text"
+                  >OK</v-btn
+                >
+              </v-card-actions>
             </v-card>
-          </v-col>
-        </v-row>
+          </template>
+        </v-dialog>
+
+        <v-card class="elevation-12">
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>Login to Play Prognosticator!</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-form v-model="valid">
+              <v-text-field
+                v-model="email"
+                label="Email"
+                name="email"
+                prepend-icon="mdi-email"
+                type="text"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="password"
+                id="password"
+                label="Password"
+                name="password"
+                prepend-icon="mdi-lock"
+                type="password"
+              ></v-text-field>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn @click="login" color="primary">Login</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
-
 <script>
 import { mapActions } from "vuex";
 const axios = require("axios");
@@ -89,14 +98,9 @@ export default {
           "http://192.168.1.110:3030/authentication",
           body
         );
-        console.log(response);
-        if (
-          response.status !== undefined &&
-          response.status === 201
-        ) {
+        if (response.status !== undefined && response.status === 201) {
           const token = response.data.accessToken;
           this.setToken(token);
-          console.log("Got Here", this.$router);
           this.$router.push("/gridiron");
         } else if (
           response.data.status !== undefined &&
