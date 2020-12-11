@@ -32,7 +32,6 @@ export default {
     ...mapActions({ setGameId: "setGameId" }),
     setSelectedGame(game) {
       this.setGameId(game);
-      // console.log(game);
     },
     submitPlayCall: (call) => {
       console.log(call);

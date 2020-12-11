@@ -3,7 +3,7 @@
     <v-row justify="center" align="start">
       <v-col cols="11">
         <v-card height="90%">
-          <v-card-title class="flex-d justify-center">SCOREBOARD</v-card-title>
+          <v-card-title class="flex-d justify-center">Game Leader Board</v-card-title>
           <v-card-text>
             <ul>
               <li

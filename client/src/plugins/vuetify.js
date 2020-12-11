@@ -13,8 +13,12 @@ export default new Vuetify({
       light: {
         primary: "#013369",
         error: "#ff0000",
-        football: "#ff0000",
-        button: "#d30104"
+        football: "#ffffff",
+        button: {
+          base: "#ffffff"
+        },
+        buttonText: "#ffffff",
+        buttonTextSelected: "#ff0000"
       }
     }
   }

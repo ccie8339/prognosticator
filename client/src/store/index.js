@@ -15,7 +15,6 @@ const getGames = async token => {
       "http://192.168.1.110:3030/activegames",
       config
     );
-    console.log(response);
     return response.data.data;
   } catch (Exception) {
     console.log(Exception);
@@ -27,6 +26,7 @@ export default new Vuex.Store({
     // eslint-disable-next-line
     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MDY4NTQ1OTIsImV4cCI6MTYwOTQ0NjU5MiwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6IlByb2dub3N0aWNhdG9yIFRoZSBHYW1lIiwic3ViIjoiZjNjZDNjZDctZmE2Mi00Y2Y4LTk3YjUtY2RlZmMwMmU1ZmI3IiwianRpIjoiM2U2MTI5NmEtOTAxMi00NDRmLWJhODYtMDNlMjg2M2I1ZjNmIn0.79n909Q3bPnQrkT_ScD9O4yLheSeqAW9-xU_NsuE_5I",
     currentGame: null,
+    currentGameStarted: null,
     socketAuthenticated: false,
     playId: null,
     playCall: null,

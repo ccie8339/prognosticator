@@ -3,7 +3,10 @@
     <v-row justify="center">
       <v-col cols="6">
         <v-card class="primary" shaped>
-          <v-card-title class="flex-d justify-center white--text text-xl-h4 font-weight-bold">Play Caster</v-card-title>
+          <v-card-title
+            class="flex-d justify-center white--text text-xl-h4 font-weight-bold"
+            >Play Caster</v-card-title
+          >
           <v-spacer />
           <v-card-actions>
             <v-row>
@@ -12,15 +15,15 @@
                   <v-col cols="12">
                     <v-row justify="center">
                       <v-btn
+                        :text="!playCall.run"
                         medium
-                        class="white--text"
+                        :class="
+                          playCall.run ? buttonSelectedClass : buttonClass
+                        "
                         :outlined="!playCall.run"
                         @click="
                           playCall.run = !playCall.run;
                           playCall.pass = false;
-                        "
-                        :color="
-                          playCall.run ? 'button' : 'button'
                         "
                         >RUN</v-btn
                       >
@@ -29,15 +32,16 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
-                        outlined
+                        :text="!playCall.left"
                         medium
+                        :class="
+                          playCall.left ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.left"
                         @click="
                           playCall.left = !playCall.left;
                           playCall.middle = false;
                           playCall.right = false;
-                        "
-                        :color="
-                          playCall.left ? 'football' : 'football lighten-4'
                         "
                         :disabled="!playCall.run"
                         >LEFT</v-btn
@@ -47,15 +51,16 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
-                        outlined
+                        :text="!playCall.middle"
                         medium
+                        :class="
+                          playCall.middle ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.middle"
                         @click="
                           playCall.middle = !playCall.middle;
                           playCall.left = false;
                           playCall.right = false;
-                        "
-                        :color="
-                          playCall.middle ? 'football' : 'football lighten-4'
                         "
                         :disabled="!playCall.run"
                         >MIDDLE</v-btn
@@ -65,15 +70,16 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
-                        outlined
+                        :text="!playCall.right"
                         medium
+                        :class="
+                          playCall.right ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.right"
                         @click="
                           playCall.right = !playCall.right;
                           playCall.left = false;
                           playCall.middle = false;
-                        "
-                        :color="
-                          playCall.right ? 'football' : 'football lighten-4'
                         "
                         :disabled="!playCall.run"
                         >RIGHT</v-btn
@@ -87,13 +93,15 @@
                   <v-col cols="12">
                     <v-row justify="center">
                       <v-btn
+                        :text="!playCall.pass"
                         medium
+                        :class="
+                          playCall.pass ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.pass"
                         @click="
                           playCall.pass = !playCall.pass;
                           playCall.run = false;
-                        "
-                        :color="
-                          playCall.pass ? 'football' : 'football lighten-4'
                         "
                         >PASS</v-btn
                       >
@@ -102,14 +110,16 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        :text="!playCall.short"
                         medium
+                        :class="
+                          playCall.short ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.short"
                         @click="
                           playCall.short = !playCall.short;
                           playCall.medium = false;
                           playCall.long = false;
-                        "
-                        :color="
-                          playCall.short ? 'football' : 'football lighten-4'
                         "
                         :disabled="!playCall.pass"
                         >SHORT</v-btn
@@ -119,14 +129,16 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        :text="!playCall.medium"
                         medium
+                        :class="
+                          playCall.medium ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.medium"
                         @click="
                           playCall.medium = !playCall.medium;
                           playCall.short = false;
                           playCall.long = false;
-                        "
-                        :color="
-                          playCall.medium ? 'football' : 'football lighten-4'
                         "
                         :disabled="!playCall.pass"
                         >MEDIUM</v-btn
@@ -136,14 +148,16 @@
                   <v-col cols="4">
                     <v-row justify="center">
                       <v-btn
+                        :text="!playCall.long"
                         medium
+                        :class="
+                          playCall.long ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.long"
                         @click="
                           playCall.long = !playCall.long;
                           playCall.medium = false;
                           playCall.short = false;
-                        "
-                        :color="
-                          playCall.long ? 'football' : 'football lighten-4'
                         "
                         :disabled="!playCall.pass"
                         >LONG</v-btn
@@ -153,30 +167,40 @@
                 </v-row>
               </v-col>
               <v-col cols="12">
-                <v-row justify="space-around">
-                  <v-btn
-                    large
-                    @click="playCall.touchdown = !playCall.touchdown"
-                    :color="
-                      playCall.touchdown ? 'football' : 'football lighten-4'
-                    "
-                    >TOUCHDOWN</v-btn
-                  >
-                  <v-btn
-                    large
-                    @click="playCall.turnover = !playCall.turnover"
-                    :color="
-                      playCall.turnover ? 'football' : 'football lighten-4'
-                    "
-                    >TURNOVER</v-btn
-                  >
+                <v-row>
+                  <v-col cols="6">
+                    <v-row justify="center">
+                      <v-btn
+                        :text="!playCall.touchdown"
+                        large
+                        :class="
+                          playCall.touchdown ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.touchdown"
+                        @click="playCall.touchdown = !playCall.touchdown"
+                        >TOUCHDOWN</v-btn
+                      >
+                    </v-row>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-row justify="center">
+                      <v-btn
+                        :text="!playCall.turnover"
+                        :class="
+                          playCall.turnover ? buttonSelectedClass : buttonClass
+                        "
+                        :outlined="!playCall.turnover"
+                        large
+                        @click="playCall.turnover = !playCall.turnover"
+                        >TURNOVER</v-btn
+                      >
+                    </v-row>
+                  </v-col>
                 </v-row>
               </v-col>
               <v-col rows="12">
                 <v-row justify="space-around">
-                  <v-btn medium @click="submitPlay" color="button"
-                    >CALL!</v-btn
-                  >
+                  <v-btn medium class="text-lg-h6" @click="submitPlay" color="button">CALL!</v-btn>
                 </v-row>
               </v-col>
             </v-row>
@@ -201,9 +225,11 @@ export default {
         medium: false,
         long: false,
         touchdown: false,
-        turnover: false
+        turnover: false,
       },
-      defaultPlayCall: null
+      buttonClass: "buttonText--text text-lg-h6",
+      buttonSelectedClass: "buttonTextSelected--text",
+      defaultPlayCall: null,
     };
   },
   methods: {
@@ -236,11 +262,11 @@ export default {
       }
       this.submitPlayCall(play);
       this.playCall = { ...this.defaultPlayCall };
-    }
+    },
   },
   created() {
     this.defaultPlayCall = { ...this.playCall };
-  }
+  },
 };
 </script>
 <style scoped>
@@ -251,6 +277,6 @@ export default {
   background: linear-gradient(#09da1a, #0a5010);
 }
 .PlayCaster {
-  background-color:blue;
+  background-color: blue;
 }
 </style>
