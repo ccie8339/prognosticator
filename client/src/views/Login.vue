@@ -2,7 +2,9 @@
   <v-container fill-height fluid>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="4">
-        <v-progress-circular class="flex-d justify-center" v-if="validatingCredentials === true" indeterminate size="200" width="10" color="primary" />
+        <v-row v-if="validatingCredentials === true" justify="center">
+        <v-progress-circular indeterminate size="200" width="10" color="primary" />
+        </v-row>
         <v-dialog v-model="loginError" max-width="35%">
           <template>
             <v-card>
