@@ -12,6 +12,7 @@
         </v-col>
         <v-row fill-height>
           <v-col cols="12">
+            <score-board />
             <play-caster :submitPlayCall="submitPlayCall" class="mx-auto" />
           </v-col>
         </v-row>
@@ -59,6 +60,7 @@ import GameSelector from "../components/GameSelector";
 import GameLobby from "../components/GameLobby";
 import PlayCaster from "../components/PlayCaster";
 import LeaderBoard from "../components/LeaderBoard";
+import ScoreBoard from "../components/ScoreBoard";
 export default {
   data() {
     return {};
@@ -68,9 +70,10 @@ export default {
     GameLobby,
     PlayCaster,
     LeaderBoard,
+    ScoreBoard
   },
   methods: {
-    ...mapActions({ setGameId: "setGameId" }),
+    ...mapActions({ setGameId: "setGameId", setAvailableGames: "setAvailableGames" }),
     setSelectedGame(game) {
       this.setGameId(game);
     },
@@ -84,5 +87,8 @@ export default {
       currentGameStarted: "getCurrentGameStarted",
     }),
   },
+  created() {
+    this.setAvailableGames();
+  }
 };
 </script>

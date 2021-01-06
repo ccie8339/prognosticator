@@ -2,6 +2,7 @@
   <v-container fill-height fluid>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="4">
+        <v-progress-circular class="flex-d justify-center" v-if="validatingCredentials === true" indeterminate size="200" width="10" color="primary" />
         <v-dialog v-model="loginError" max-width="35%">
           <template>
             <v-card>
@@ -26,7 +27,7 @@
           </template>
         </v-dialog>
 
-        <v-card class="elevation-12">
+        <v-card v-if="validatingCredentials === false" class="elevation-12">
           <v-toolbar color="primary" dark flat>
             <v-toolbar-title>Login to Play Prognosticator!</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -64,10 +65,10 @@
 import { mapActions } from "vuex";
 const axios = require("axios");
 axios.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  error => {
+  (error) => {
     if (error.response.status === 401) {
       const response = { data: { status: 401 } };
       return response;
@@ -82,16 +83,17 @@ export default {
       email: null,
       password: null,
       loginErrorMessage: null,
-      loginError: false
+      loginError: false,
+      validatingCredentials: true,
     };
   },
   methods: {
-    ...mapActions({ setToken: "setToken" }),
+    ...mapActions({ setToken: "setToken", setUserId: "setUserId" }),
     async login() {
       const body = {
         strategy: "local",
         email: this.email,
-        password: this.password
+        password: this.password,
       };
       try {
         const response = await axios.post(
@@ -100,7 +102,11 @@ export default {
         );
         if (response.status !== undefined && response.status === 201) {
           const token = response.data.accessToken;
+          const userId = response.data.user.id;
+          localStorage.token = token;
+          localStorage.userId = userId;
           this.setToken(token);
+          this.setUserId(userId);
           this.$router.push("/gridiron");
         } else if (
           response.data.status !== undefined &&
@@ -112,7 +118,46 @@ export default {
       } catch (error) {
         console.log("ERROR: ", error);
       }
+    },
+    async verifyToken(userId, token) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      try {
+        const response = await axios.get(
+          `http://192.168.1.110:3030/users/${userId}`,
+          config
+        );
+        if (response.status !== undefined && response.status === 200) {
+          console.log(response);
+          this.setToken(token);
+          this.setUserId(userId);
+          this.$router.push("/gridiron");
+        } else {
+          this.validatingCredentials = false;
+        }
+      } catch (error) {
+        console.log(error)
+        localStorage.userId = null;
+        localStorage.token = null;
+        this.validatingCredentials = false;
+      }
+    },
+  },
+  mounted() {
+    if (
+      localStorage.token != undefined &&
+      localStorage.token != null &&
+      localStorage.userId != undefined &&
+      localStorage.userId != null
+    ) {
+      this.verifyToken(localStorage.userId, localStorage.token);
+    } else {
+      console.log("No Local Credentials")
+      this.validatingCredentials = false;
     }
-  }
+  },
 };
 </script>

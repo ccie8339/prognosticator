@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const getGames = async token => {
   const config = {
     headers: {
-      authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     }
   };
   try {
@@ -23,8 +23,9 @@ const getGames = async token => {
 
 export default new Vuex.Store({
   state: {
+    userId: null,
     // eslint-disable-next-line
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MDY4NTQ1OTIsImV4cCI6MTYwOTQ0NjU5MiwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6IlByb2dub3N0aWNhdG9yIFRoZSBHYW1lIiwic3ViIjoiZjNjZDNjZDctZmE2Mi00Y2Y4LTk3YjUtY2RlZmMwMmU1ZmI3IiwianRpIjoiM2U2MTI5NmEtOTAxMi00NDRmLWJhODYtMDNlMjg2M2I1ZjNmIn0.79n909Q3bPnQrkT_ScD9O4yLheSeqAW9-xU_NsuE_5I",
+    token: "",
     currentGame: null,
     currentGameStarted: null,
     socketAuthenticated: false,
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    setUserId(state, userId) {
+      state.userId = userId;
+    },
     setToken(state, token) {
       state.token = token;
       state.authenticated = true;
@@ -78,8 +82,12 @@ export default new Vuex.Store({
       const availableGames = await getGames(state.token);
       commit("setAvailableGames", availableGames);
     },
+    setUserId({commit}, userId) {
+      commit("setUserId", userId);
+    },
     setToken({ commit }, token) {
       commit("setToken", token);
+      // localStorage.token = token;
     },
     SOCKET_connect({ commit }) {
       Vue.prototype.$socket.emit(
@@ -100,9 +108,9 @@ export default new Vuex.Store({
       );
     },
     // eslint-disable-next-line
-    "SOCKET_joinedgames created"({ state, commit }, data) {
-      console.log(data);
-    },
+    // "SOCKET_joinedgames created"({ state, commit }, data) {
+    //   console.log(data);
+    // },
     "SOCKET_activegames created"({ commit }, data) {
       commit("setAvailableGames", []);
       commit("setAvailableGames", data.games);
