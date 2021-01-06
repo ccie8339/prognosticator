@@ -25,7 +25,7 @@ export default new Vuex.Store({
   state: {
     userId: null,
     // eslint-disable-next-line
-    token: "",
+    token: null,
     currentGame: null,
     currentGameStarted: null,
     socketAuthenticated: false,
@@ -143,7 +143,7 @@ export default new Vuex.Store({
     getCurrentGame: state => {
       let currentGame = null
       state.availableGames.map(game => {
-        console.log(game.id, state.currentGame);
+        // console.log(game.id, state.currentGame);
         if (game.id === state.currentGame) {
           currentGame = game;
         }

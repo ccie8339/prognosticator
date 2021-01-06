@@ -73,7 +73,7 @@ export default {
     ScoreBoard
   },
   methods: {
-    ...mapActions({ setGameId: "setGameId", setAvailableGames: "setAvailableGames" }),
+    ...mapActions({ setGameId: "setGameId", setAvailableGames: "setAvailableGames", setUserId: "setUserId", setToken: "setToken" }),
     setSelectedGame(game) {
       this.setGameId(game);
     },
@@ -88,7 +88,14 @@ export default {
     }),
   },
   created() {
-    this.setAvailableGames();
+    const token = localStorage.token;
+    const userId = localStorage.userId;
+    if (token != null && userId != null) {
+      this.setUserId(userId);
+      this.setToken(token);
+      this.setAvailableGames();
+
+    }
   }
 };
 </script>
