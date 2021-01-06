@@ -50,3 +50,7 @@ Professional American Football Live Play Calling Prediction Game
   - npm test
 - Production
   - npm start
+
+## RUNNING CLIENT APP
+- Development
+  - npm run serve

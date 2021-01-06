@@ -90,7 +90,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions({ setToken: "setToken", setUserId: "setUserId" }),
+    ...mapActions({ setToken: "setToken", setUserId: "setUserId", setLogonId: "setLogonId", setPassword: "setPassword" }),
     async login() {
       const body = {
         strategy: "local",
@@ -107,8 +107,10 @@ export default {
           const userId = response.data.user.id;
           localStorage.token = token;
           localStorage.userId = userId;
-          this.setToken(token);
-          this.setUserId(userId);
+          await this.setToken(token);
+          await this.setUserId(userId);
+          await this.setLogonId(this.email);
+          await this.setPassword(this.password);
           this.$router.push("/gridiron");
         } else if (
           response.data.status !== undefined &&
@@ -133,7 +135,6 @@ export default {
           config
         );
         if (response.status !== undefined && response.status === 200) {
-          console.log(response);
           this.setToken(token);
           this.setUserId(userId);
           this.$router.push("/gridiron");
@@ -157,7 +158,7 @@ export default {
     ) {
       this.verifyToken(localStorage.userId, localStorage.token);
     } else {
-      console.log("No Local Credentials")
+      // console.log("No Local Credentials")
       this.validatingCredentials = false;
     }
   },

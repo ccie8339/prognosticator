@@ -6,6 +6,7 @@ module.exports = function (app) {
   }
 
   app.on('connection', connection => {
+    // console.log("Connection ", connection)
     // On a new real-time connection, add it to the anonymous channel
     app.channel('anonymous').join(connection);
   });
@@ -39,9 +40,17 @@ module.exports = function (app) {
       // app.channel(`userIds/${user.id}`).join(connection);
     }
   });
+  app.service('activegames').publish('patched', async (data,hook) => {
+    try {
+      const game = await app.service('activegames').get(data.id);
+      const response = await app.channel(`CHANNEL_${game.channel}`).send({message: "GAME_STARTED", gameId: data.id, started: true});
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  })
   app.service('activegames').publish(async (data, hook) => {
     if (data.id !== undefined) { // Prevent New Play Being Created When New Game Create Fails
-      // app.service('plays').create({gameId : data.id})
       try {
         const response = await app.service('activegames').find();
         return app.channel("player").send({ message: "NEW_GAME_AVAILABLE", games:  response.data});
@@ -57,8 +66,7 @@ module.exports = function (app) {
     try {
       const games = await app.service('activegames').get(data.gameId);
       await app.channel(`CHANNEL_${games.channel}`).join(userConnections[data.userId]);
-      const response = await app.channel(`CHANNEL_${games.channel}`).send({message: "TEST MESSAGE"});
-      return response;
+      return app.channel(`CHANNEL_${games.channel}`).send({message: "TEST MESSAGE"});
     } catch (error) {
       console.log(error);
     }

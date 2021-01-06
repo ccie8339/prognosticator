@@ -1,7 +1,7 @@
 <template>
   <v-row class="fill-height">
     <v-container
-      v-if="currentGameStarted === true || true"
+      v-if="currentGameStarted == true"
       class="d-flex align-start mt-0 pa-1"
       justify="start"
       fill-height
@@ -55,12 +55,17 @@
   </v-row>
 </template>
 <script>
+import Vue from "vue";
+import store from "../store";
 import { mapGetters, mapActions } from "vuex";
+import VueSocketIO from "vue-socket.io";
 import GameSelector from "../components/GameSelector";
 import GameLobby from "../components/GameLobby";
 import PlayCaster from "../components/PlayCaster";
 import LeaderBoard from "../components/LeaderBoard";
 import ScoreBoard from "../components/ScoreBoard";
+
+
 export default {
   data() {
     return {};
@@ -70,10 +75,15 @@ export default {
     GameLobby,
     PlayCaster,
     LeaderBoard,
-    ScoreBoard
+    ScoreBoard,
   },
   methods: {
-    ...mapActions({ setGameId: "setGameId", setAvailableGames: "setAvailableGames", setUserId: "setUserId", setToken: "setToken" }),
+    ...mapActions({
+      setGameId: "setGameId",
+      setAvailableGames: "setAvailableGames",
+      setUserId: "setUserId",
+      setToken: "setToken",
+    }),
     setSelectedGame(game) {
       this.setGameId(game);
     },
@@ -83,19 +93,31 @@ export default {
   },
   computed: {
     ...mapGetters({
+      logonId: "logonId",
+      password: "password",
       currentGame: "getCurrentGame",
       currentGameStarted: "getCurrentGameStarted",
     }),
   },
-  created() {
+  mounted() {
+    Vue.use(
+      new VueSocketIO({
+        debug: true,
+        connection: "http://192.168.1.110:3030", //options object is Optional
+        vuex: {
+          store,
+          actionPrefix: "SOCKET_",
+          // mutationPrefix: "SOCKET_",
+        },
+      })
+    );
     const token = localStorage.token;
     const userId = localStorage.userId;
     if (token != null && userId != null) {
       this.setUserId(userId);
       this.setToken(token);
       this.setAvailableGames();
-
     }
-  }
+  },
 };
 </script>

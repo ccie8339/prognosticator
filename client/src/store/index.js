@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+// import VueSocketIO from "vue-socket.io";
 
 Vue.use(Vuex);
 
@@ -20,10 +21,32 @@ const getGames = async token => {
     console.log(Exception);
   }
 };
-
+const setActiveGame = async (token, userId, gameId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  };
+  const body = {
+    gameId: gameId,
+    userId: userId
+  };
+  try {
+    const response = await axios.post(
+      "http://192.168.1.110:3030/joinedgames",
+      body,
+      config,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 export default new Vuex.Store({
   state: {
     userId: null,
+    logonId: null,
+    password: null,
     // eslint-disable-next-line
     token: null,
     currentGame: null,
@@ -55,6 +78,12 @@ export default new Vuex.Store({
     setUserId(state, userId) {
       state.userId = userId;
     },
+    setLogonId(state, logonId) {
+      state.logonId = logonId;
+    },
+    setPassword(state, password) {
+      state.password = password;
+    },
     setToken(state, token) {
       state.token = token;
       state.authenticated = true;
@@ -63,6 +92,7 @@ export default new Vuex.Store({
       state.socketAuthenticated = true;
     },
     setGameId(state, gameId) {
+      setActiveGame(state.token, state.userId, gameId);
       state.currentGame = gameId;
     },
     setCurrentGameStarted(state, isGameStarted) {
@@ -82,23 +112,28 @@ export default new Vuex.Store({
       const availableGames = await getGames(state.token);
       commit("setAvailableGames", availableGames);
     },
-    setUserId({commit}, userId) {
+    setUserId({ commit }, userId) {
       commit("setUserId", userId);
+    },
+    setLogonId({ commit }, logonId) {
+      commit("setLogonId", logonId);
+    },
+    setPassword({ commit }, password) {
+      commit("setPassword", password);
     },
     setToken({ commit }, token) {
       commit("setToken", token);
-      // localStorage.token = token;
     },
-    SOCKET_connect({ commit }) {
+    SOCKET_connect({ state, commit }) {
       Vue.prototype.$socket.emit(
         "create",
         "authentication",
         {
           strategy: "local",
-          email: "admin@local.com",
-          password: "changeme"
+          email: state.logonId,
+          password: state.password
         },
-        function(error) {
+        function (error) {
           if (error) {
             console.log("Error Authenticating: ", error);
           } else {
@@ -107,10 +142,6 @@ export default new Vuex.Store({
         }
       );
     },
-    // eslint-disable-next-line
-    // "SOCKET_joinedgames created"({ state, commit }, data) {
-    //   console.log(data);
-    // },
     "SOCKET_activegames created"({ commit }, data) {
       commit("setAvailableGames", []);
       commit("setAvailableGames", data.games);
@@ -124,6 +155,11 @@ export default new Vuex.Store({
           break;
       }
     },
+    "SOCKET_activegames patched"({state, commit}, data) {
+      if (data.gameId === state.currentGame && data.started == true) {
+        commit("setCurrentGameStarted", true);
+      }
+    },
     setGameId({ commit }, gameId) {
       commit("setGameId", gameId);
       commit("setCurrentGameStarted", false);
@@ -134,6 +170,8 @@ export default new Vuex.Store({
   },
   modules: {},
   getters: {
+    logonId: state => state.logonId,
+    password: state => state.password,
     isAuthenticated: state => state.authenticated,
     token: state => state.token,
     playCall: state => state.playCall,
@@ -143,7 +181,6 @@ export default new Vuex.Store({
     getCurrentGame: state => {
       let currentGame = null
       state.availableGames.map(game => {
-        // console.log(game.id, state.currentGame);
         if (game.id === state.currentGame) {
           currentGame = game;
         }
