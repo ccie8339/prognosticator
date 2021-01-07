@@ -102,8 +102,8 @@ export default {
         if (response.status !== undefined && response.status === 201) {
           const token = response.data.accessToken;
           const userId = response.data.user.id;
-          localStorage.token = token;
-          localStorage.userId = userId;
+          // localStorage.token = token;
+          // localStorage.userId = userId;
           await this.setToken(token);
           await this.setUserId(userId);
           await this.setLogonId(this.email);

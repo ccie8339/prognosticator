@@ -33,8 +33,8 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container v-else-if="currentGame === null">
-      <v-row class="mx-auto" fill-height>
+    <v-container v-else-if="currentGame === null" fill-height>
+      <v-row class="mx-auto">
         <game-selector />
       </v-row>
     </v-container>
@@ -101,26 +101,10 @@ export default {
     }),
   },
   mounted() {
-    const token = localStorage.token;
-    const userId = localStorage.userId;
-    if (token != null && userId != null) {
-      this.setUserId(userId);
-      this.setToken(token);
+    if (this.token !== null) {
       this.setAvailableGames();
-    }
-    if (this.logonId === null || this.password === null) {
+    } else {
       this.$router.push("/");
-      // Vue.use(
-      //   new VueSocketIO({
-      //     debug: true,
-      //     connection: "http://192.168.1.110:3030", //options object is Optional
-      //     vuex: {
-      //       store,
-      //       actionPrefix: "SOCKET_",
-      //       // mutationPrefix: "SOCKET_",
-      //     },
-      //   })
-      // );
     }
   },
 };
