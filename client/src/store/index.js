@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+// import router from "../router";
 // import VueSocketIO from "vue-socket.io";
 
 Vue.use(Vuex);
@@ -21,7 +22,7 @@ const getGames = async token => {
     console.log(Exception);
   }
 };
-const setActiveGame = async (token, userId, gameId) => {
+const joinGame = async (token, userId, gameId) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -37,11 +38,39 @@ const setActiveGame = async (token, userId, gameId) => {
       body,
       config,
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
+const getJoinedGame = async (token, userId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  };
+  let body = {
+    userId: userId
+  };
+  try {
+    let response = await axios.get(
+      "http://192.168.1.110:3030/joinedgames",
+      body,
+      config,
+    );
+    if (response.data.total == 1) {
+      const game = response.data.data[0];
+      return game.gameId;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export default new Vuex.Store({
   state: {
     userId: null,
@@ -50,7 +79,7 @@ export default new Vuex.Store({
     // eslint-disable-next-line
     token: null,
     currentGame: null,
-    currentGameStarted: null,
+    currentGameStarted: false,
     socketAuthenticated: false,
     playId: null,
     playCall: null,
@@ -91,8 +120,8 @@ export default new Vuex.Store({
     setSocketAuthenticated(state) {
       state.socketAuthenticated = true;
     },
-    setGameId(state, gameId) {
-      setActiveGame(state.token, state.userId, gameId);
+    setCurrentGame(state, gameId) {
+      // setActiveGame(state.token, state.userId, gameId);
       state.currentGame = gameId;
     },
     setCurrentGameStarted(state, isGameStarted) {
@@ -124,23 +153,44 @@ export default new Vuex.Store({
     setToken({ commit }, token) {
       commit("setToken", token);
     },
+    async joinGame({state, commit}, gameId) {
+      console.log("Joining Game", gameId);
+      const response = await joinGame(state.token, state.userId, gameId);
+      if (response !== null) {
+        commit("setCurrentGame", response.gameId);
+      }
+      // console.log(response);
+    },
     SOCKET_connect({ state, commit }) {
-      Vue.prototype.$socket.emit(
-        "create",
-        "authentication",
-        {
-          strategy: "local",
-          email: state.logonId,
-          password: state.password
-        },
-        function (error) {
-          if (error) {
-            console.log("Error Authenticating: ", error);
-          } else {
-            commit("setSocketAuthenticated");
+      if (state.logonId !== null && state.password !== null) {
+        Vue.prototype.$socket.emit(
+          "create",
+          "authentication",
+          {
+            strategy: "local",
+            email: state.logonId,
+            password: state.password
+          },
+          async function (error) {
+            if (error) {
+              console.log("Error Authenticating: ", error);
+            } else {
+              commit("setSocketAuthenticated");
+              const joinedGame = await getJoinedGame(state.token, state.userId);
+              if (joinedGame !== null) {
+                commit("setCurrentGame", joinedGame);
+                state.availableGames.forEach(game => {
+                  if (game.id === joinedGame) {
+                    commit("setCurrentGameStarted", true);
+                  }
+                })
+              }
+            }
           }
-        }
-      );
+        );
+      } else {
+        // router.push("/");
+      }
     },
     "SOCKET_activegames created"({ commit }, data) {
       commit("setAvailableGames", []);
@@ -160,10 +210,10 @@ export default new Vuex.Store({
         commit("setCurrentGameStarted", true);
       }
     },
-    setGameId({ commit }, gameId) {
-      commit("setGameId", gameId);
-      commit("setCurrentGameStarted", false);
-    },
+    // setGameId({ commit }, gameId) {
+    //   commit("setGameId", gameId);
+    //   commit("setCurrentGameStarted", false);
+    // },
     setGames({ commit }, games) {
       commit("setGames", games);
     }

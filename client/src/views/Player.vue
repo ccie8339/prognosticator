@@ -35,7 +35,7 @@
     </v-container>
     <v-container v-else-if="currentGame === null">
       <v-row class="mx-auto" fill-height>
-        <game-selector :setSelectedGame="setSelectedGame" />
+        <game-selector />
       </v-row>
     </v-container>
     <v-container v-else class="fill-height align-center">
@@ -55,10 +55,10 @@
   </v-row>
 </template>
 <script>
-import Vue from "vue";
-import store from "../store";
+// import Vue from "vue";
+// import store from "../store";
 import { mapGetters, mapActions } from "vuex";
-import VueSocketIO from "vue-socket.io";
+// import VueSocketIO from "vue-socket.io";
 import GameSelector from "../components/GameSelector";
 import GameLobby from "../components/GameLobby";
 import PlayCaster from "../components/PlayCaster";
@@ -79,14 +79,15 @@ export default {
   },
   methods: {
     ...mapActions({
-      setGameId: "setGameId",
+      // setGameId: "setGameId",
+      // joinGame: "joinGame",
       setAvailableGames: "setAvailableGames",
       setUserId: "setUserId",
       setToken: "setToken",
     }),
-    setSelectedGame(game) {
-      this.setGameId(game);
-    },
+    // setSelectedGame(game) {
+    //   this.setGameId(game);
+    // },
     submitPlayCall: (call) => {
       console.log(call);
     },
@@ -100,23 +101,26 @@ export default {
     }),
   },
   mounted() {
-    Vue.use(
-      new VueSocketIO({
-        debug: true,
-        connection: "http://192.168.1.110:3030", //options object is Optional
-        vuex: {
-          store,
-          actionPrefix: "SOCKET_",
-          // mutationPrefix: "SOCKET_",
-        },
-      })
-    );
     const token = localStorage.token;
     const userId = localStorage.userId;
     if (token != null && userId != null) {
       this.setUserId(userId);
       this.setToken(token);
       this.setAvailableGames();
+    }
+    if (this.logonId === null || this.password === null) {
+      this.$router.push("/");
+      // Vue.use(
+      //   new VueSocketIO({
+      //     debug: true,
+      //     connection: "http://192.168.1.110:3030", //options object is Optional
+      //     vuex: {
+      //       store,
+      //       actionPrefix: "SOCKET_",
+      //       // mutationPrefix: "SOCKET_",
+      //     },
+      //   })
+      // );
     }
   },
 };

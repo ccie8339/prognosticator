@@ -43,7 +43,13 @@ module.exports = function (app) {
   app.service('activegames').publish('patched', async (data,hook) => {
     try {
       const game = await app.service('activegames').get(data.id);
-      const response = await app.channel(`CHANNEL_${game.channel}`).send({message: "GAME_STARTED", gameId: data.id, started: true});
+      const leaderBoard = await app.service('joinedgames').find({
+        query: {
+          gameId: data.id
+        }
+      })
+      console.log(leaderBoard.data);
+      const response = await app.channel(`CHANNEL_${game.channel}`).send({message: "GAME_STARTED", gameId: data.id, started: true, leaderBoard: leaderBoard});
       return response;
     } catch (error) {
       console.log(error);
@@ -64,9 +70,11 @@ module.exports = function (app) {
   })
   app.service('joinedgames').publish('created', async (data, hook) => {
     try {
-      const games = await app.service('activegames').get(data.gameId);
-      await app.channel(`CHANNEL_${games.channel}`).join(userConnections[data.userId]);
-      return app.channel(`CHANNEL_${games.channel}`).send({message: "TEST MESSAGE"});
+      if (data !== null) {
+        const games = await app.service('activegames').get(data.gameId);
+        await app.channel(`CHANNEL_${games.channel}`).join(userConnections[data.userId]);
+        return app.channel(`CHANNEL_${games.channel}`).send({message: "TEST MESSAGE"});
+      }
     } catch (error) {
       console.log(error);
     }

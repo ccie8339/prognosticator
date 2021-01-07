@@ -28,24 +28,24 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  props: ["setSelectedGame"],
+  props: [],
   data() {
     return {
       selectedGame: null
     };
   },
   methods: {
-    ...mapActions({ setAvailableGames: "setAvailableGames" }),
+    ...mapActions({ joinGame: "joinGame" }),
     chooseGame() {
-      this.setSelectedGame(this.selectedGame);
+      this.joinGame(this.selectedGame);
     }
   },
   computed: {
     ...mapGetters({ availableGames: "getAvailableGames" })
   },
-  created() {
-    this.setAvailableGames();
-  }
+  // created() {
+  //   this.setAvailableGames();
+  // }
 };
 </script>
 <style scoped>

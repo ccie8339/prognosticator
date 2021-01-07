@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store";
+import VueSocketIO from "vue-socket.io";
 import Login from "../views/Login.vue";
 import Player from "../views/Player.vue";
 
@@ -14,7 +16,23 @@ const routes = [
   {
     path: "/gridiron",
     name: "Grid Iron",
-    component: Player
+    component: Player,
+    beforeEnter(to, from, next) {
+      if (!Vue.prototype.$socket) {
+        Vue.use(
+          new VueSocketIO({
+            debug: true,
+            connection: "http://192.168.1.110:3030", //options object is Optional
+            vuex: {
+              store,
+              actionPrefix: "SOCKET_",
+              // mutationPrefix: "SOCKET_",
+            },
+          })
+        );
+      }
+      next();
+    }
   }
   // {
   //   path: "/about",
