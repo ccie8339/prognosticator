@@ -11,10 +11,11 @@ module.exports = function (app) {
     app.channel('anonymous').join(connection);
   });
 
-  app.on('login', (authResult, { connection }) => {
+  app.on('login', async (authResult, { connection }) => {
     // connection can be undefined if there is no
     // real-time connection, e.g. when logging in via REST
     if (connection) {
+      // console.log(authResult)
       // Obtain the logged in user from the connection
       // const user = connection.user;
 
@@ -28,6 +29,21 @@ module.exports = function (app) {
       } catch (error) {
         console.log(error);
       }
+      try {
+        const joinedGames = await app.service('joinedgames').find({
+          query: {
+            userId: authResult.user.id
+          }
+        })
+        if (joinedGames.total === 1) {
+          const channel = joinedGames.data[0]['game.channel'];
+          app.channel(`CHANNEL_${channel}`).join(connection);
+        }
+        console.log(joinedGames)
+      } catch (error) {
+
+      }
+      
       // Channels can be named anything and joined on any condition 
 
       // E.g. to send real-time events only to admins use
@@ -48,7 +64,10 @@ module.exports = function (app) {
           gameId: data.id
         }
       })
-      console.log(leaderBoard.data);
+      const newPlay = await app.service('plays').create({
+        gameId: data.id
+      })
+      const playId = newPlay.id;
       const response = await app.channel(`CHANNEL_${game.channel}`).send({message: "GAME_STARTED", gameId: data.id, started: true, leaderBoard: leaderBoard});
       return response;
     } catch (error) {
@@ -65,8 +84,15 @@ module.exports = function (app) {
       }
     }
   })
-  app.service('plays').publish((data, hook) => {
-    return app.channel("player").send({ message: "REQUEST_PLAYCALL", gameId: data.gameId, playId: data.id, });
+  app.service('plays').publish('created', async (data, hook) => {
+    const playId = data.id;
+    try {
+      const response = await app.service("plays").get(playId);
+      const gameChannel = response['game.channel'];
+      return app.channel(`CHANNEL_${gameChannel}`).send({ message: "REQUEST_PLAYCALL", gameId: data.gameId, playId: data.id, });
+    } catch (error) {
+      console.log(error);
+    }
   })
   app.service('joinedgames').publish('created', async (data, hook) => {
     try {

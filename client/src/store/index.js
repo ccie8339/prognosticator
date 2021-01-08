@@ -133,6 +133,9 @@ export default new Vuex.Store({
     },
     setAvailableGames(state, games) {
       state.availableGames = [...games];
+    },
+    setPlayCall(state, playCall) {
+      state.playCall = playCall;
     }
   },
   actions: {
@@ -199,7 +202,7 @@ export default new Vuex.Store({
     "SOCKET_plays created"({ state, commit }, data) {
       switch (data.message) {
         case "REQUEST_PLAYCALL":
-          if (data.gameId == state.gameId) {
+          if (data.gameId == state.currentGame) {
             commit("requestPlayCall", data.playId);
           }
           break;
@@ -216,10 +219,14 @@ export default new Vuex.Store({
     // },
     setGames({ commit }, games) {
       commit("setGames", games);
+    },
+    setPlayCall({commit}, playCall) {
+      commit("setPlayCall", playCall);
     }
   },
   modules: {},
   getters: {
+    userId: state => state.userId,
     logonId: state => state.logonId,
     password: state => state.password,
     isAuthenticated: state => state.authenticated,
@@ -227,6 +234,7 @@ export default new Vuex.Store({
     playCall: state => state.playCall,
     getAvailableGames: state => state.availableGames,
     getPlayId: state => state.playId,
+    getPlayCall: state => state.playCall,
     getScoreBoard: state => state.scoreBoard,
     getCurrentGame: state => {
       let currentGame = null
@@ -237,6 +245,7 @@ export default new Vuex.Store({
       })
       return currentGame;
     },
+    getCurrentGameId: state => state.currentGame,
     getCurrentGameStarted: state => state.currentGameStarted
   }
 });

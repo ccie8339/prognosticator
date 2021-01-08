@@ -3,7 +3,21 @@
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [
+      context => {
+        context.params.sequelize = {
+          include: [
+            {
+              model: context.app.services['activegames'].Model,
+              attributes: ['channel'],
+              as: 'game'
+            }
+          ]
+        }
+        // raw: false
+        return context;
+      }
+    ],
     get: [],
     create: [
       async context => {

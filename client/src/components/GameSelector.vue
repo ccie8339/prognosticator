@@ -52,9 +52,9 @@ export default {
   computed: {
     ...mapGetters({ availableGames: "getAvailableGames" }),
   },
-  created() {
-    this.setAvailableGames();
-  }
+  // created() {
+  //   this.setAvailableGames();
+  // }
 };
 </script>
 <style scoped>

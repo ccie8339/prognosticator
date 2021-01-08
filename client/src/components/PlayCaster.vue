@@ -200,7 +200,14 @@
               </v-col>
               <v-col rows="12">
                 <v-row justify="space-around">
-                  <v-btn medium class="text-lg-h6" @click="submitPlay" color="button">CALL!</v-btn>
+                  <v-btn
+                    medium
+                    class="text-lg-h6"
+                    @click="submitPlay"
+                    color="button"
+                    :disabled="calledPlay !== null"
+                    >CALL!</v-btn
+                  >
                 </v-row>
               </v-col>
             </v-row>
@@ -211,7 +218,8 @@
   </v-container>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import axios from "axios";
 export default {
   props: ["submitPlayCall"],
   data() {
@@ -234,10 +242,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({currentGameStarted : "getCurrentGameStarted"})
+    ...mapGetters({
+      currentGameStarted: "getCurrentGameStarted",
+      userId: "userId",
+      gameId: "getCurrentGameId",
+      playId: "getPlayId",
+      calledPlay: "getPlayCall",
+      token: "token",
+    }),
   },
   methods: {
-    submitPlay() {
+    ...mapActions({
+      setPlayCall: "setPlayCall",
+    }),
+    async submitPlay() {
       let play = "";
       if (this.playCall.run) {
         play += "RU";
@@ -264,7 +282,28 @@ export default {
       if (this.playCall.turnover) {
         play += "TO";
       }
-      this.submitPlayCall(play);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      };
+      const body = {
+        playcall: play,
+        play: this.playid,
+        gameId: this.gameId,
+        userId: this.userId
+      }
+      console.log(body)
+      try {
+        await axios.post(
+          "http://192.168.1.110:3030/playcalls",
+          body,
+          config
+        );
+        this.setPlayCall(play);
+      } catch (Exception) {
+        console.log(Exception);
+      }
       this.playCall = { ...this.defaultPlayCall };
     },
   },
